@@ -9,5 +9,6 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue' monospace sans-serif;
 }

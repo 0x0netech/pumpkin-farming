@@ -20,9 +20,9 @@ const Container = styled.div`
 
 function App() {
 
-  /**
-   * @notice User state
-   */
+    /**
+     * @notice User state
+     */
     const [userAddress, setUserAddress] = useState("")
     const [ethBalance, setEthBalance] = useState("")
     const [daiBalance, setDaiBalance] = useState("")
@@ -33,9 +33,9 @@ function App() {
     const [userNFTs, setUserNFTs] = useState("")
 
     const userState = {
-        userAddress, 
+        userAddress,
         setUserAddress,
-        ethBalance, 
+        ethBalance,
         setEthBalance,
         daiBalance,
         setDaiBalance,
@@ -91,7 +91,7 @@ function App() {
         setJackContract,
         lotteryContract,
         setLotteryContract,
-        isLotteryOpen, 
+        isLotteryOpen,
         setIsLotteryOpen,
         isNFTOpen,
         setIsNFTOpen,
@@ -113,51 +113,51 @@ function App() {
      * @notice componentDidMount
      */
 
-    const loadProvider = useCallback(async() => {
+    const loadProvider = useCallback(async () => {
         let prov = new ethers.providers.Web3Provider(window.ethereum)
         setProvider(prov)
         return prov
     }, [setProvider])
 
-    const loadDaiContract = useCallback(async(_provider) => {
-        let daiAddress = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa" 
+    const loadDaiContract = useCallback(async (_provider) => {
+        let daiAddress = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa"
         let contract = new ethers.Contract(daiAddress, ERC20.abi, _provider)
         setDaiContract(contract)
     }, [setDaiContract])
-    
-    const loadLinkContract = useCallback(async(_provider) => {
+
+    const loadLinkContract = useCallback(async (_provider) => {
         let linkAddress = "0xa36085F69e2889c224210F603D836748e7dC0088"
         let contract = new ethers.Contract(linkAddress, ERC20.abi, _provider)
         setLinkContract(contract)
     }, [setLinkContract])
 
-    const loadPmknToken = useCallback(async(_provider) => {
-        let pmknTokenAddress = PmknToken["networks"]["42"]["address"] 
+    const loadPmknToken = useCallback(async (_provider) => {
+        let pmknTokenAddress = PmknToken["networks"]["42"]["address"]
         let contract = new ethers.Contract(pmknTokenAddress, PmknToken.abi, _provider)
         setPmknTokenContract(contract)
     }, [setPmknTokenContract])
 
-    const loadPmknFarmContract = useCallback(async(_provider) => {
+    const loadPmknFarmContract = useCallback(async (_provider) => {
         let pmknFarmAddress = PmknFarm["networks"]["42"]["address"]
         let contract = new ethers.Contract(pmknFarmAddress, PmknFarm.abi, _provider)
         setPmknFarmContract(contract)
     }, [setPmknFarmContract])
 
-    const loadJackContract = useCallback(async(_provider) => {
+    const loadJackContract = useCallback(async (_provider) => {
         let jackContractAddress = JackOLantern["networks"]["42"]["address"]
         let contract = new ethers.Contract(jackContractAddress, JackOLantern.abi, _provider)
         setJackContract(contract)
     }, [setJackContract])
 
-    const loadLotteryContract = useCallback(async(_provider) => {
+    const loadLotteryContract = useCallback(async (_provider) => {
         let lotteryContractAddress = Lottery["networks"]["42"]["address"]
         console.log("Lottery: ", lotteryContractAddress)
         let contract = new ethers.Contract(lotteryContractAddress, Lottery.abi, _provider)
         setLotteryContract(contract)
     }, [setLotteryContract])
 
-    const componentDidMount = useCallback(async() => {
-    	await loadProvider().then(async(res) => {
+    const componentDidMount = useCallback(async () => {
+        await loadProvider().then(async (res) => {
             await loadDaiContract(res)
             await loadLinkContract(res)
             await loadPmknToken(res)
@@ -167,91 +167,91 @@ function App() {
         })
         setInit(true)
     }, [
-        loadProvider, 
-        loadDaiContract, 
+        loadProvider,
+        loadDaiContract,
         loadLinkContract,
-        loadPmknToken, 
-        loadPmknFarmContract, 
+        loadPmknToken,
+        loadPmknFarmContract,
         loadJackContract,
         loadLotteryContract,
         setInit
     ])
 
     useEffect(() => {
-    	try {
-    		if(init === false){
-    			componentDidMount()
-    		  }
-    	} catch (error) {
-    		console.log(error)
-    	}
+        try {
+            if (init === false) {
+                componentDidMount()
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }, [componentDidMount, daiContract, init])
 
     /**
      * @notice userDidMount functions
      */
 
-    const loadUser = useCallback(async() => {
+    const loadUser = useCallback(async () => {
         let accounts = provider.getSigner()
         let account = await accounts.getAddress()
         return account
     }, [provider])
 
-    const loadNetwork = useCallback(async() => {
+    const loadNetwork = useCallback(async () => {
         let netId = await provider.getNetwork()
         setNetworkId(netId["name"])
     }, [provider, setNetworkId])
 
-    const loadEthBalance = useCallback(async(user) => {
+    const loadEthBalance = useCallback(async (user) => {
         let balance = await provider.getBalance(user)
         setEthBalance(balance)
     }, [provider, setEthBalance])
 
-    const loadDaiBalance = useCallback(async(user) => {
+    const loadDaiBalance = useCallback(async (user) => {
         let balance = await daiContract.balanceOf(user)
         setDaiBalance(balance.toString())
     }, [daiContract, setDaiBalance])
 
-    const loadPmknBalance = useCallback(async(user) => {
+    const loadPmknBalance = useCallback(async (user) => {
         let balance = await pmknTokenContract.balanceOf(user)
         setPmknBalance(balance.toString())
     }, [pmknTokenContract, setPmknBalance])
 
-    const loadStakingBalance = useCallback(async(user) => {
+    const loadStakingBalance = useCallback(async (user) => {
         let balance = await pmknFarmContract.stakingBalance(user)
         setStakingBalance(balance.toString())
     }, [setStakingBalance, pmknFarmContract])
 
-    const loadPmknYield = useCallback(async(user) => {
+    const loadPmknYield = useCallback(async (user) => {
         let balance = await pmknFarmContract.calculateYieldTotal(user)
         setPmknYield(balance.toString())
     }, [setPmknYield, pmknFarmContract])
 
-    const loadPmknUnrealizedYield = useCallback(async(user) => {
+    const loadPmknUnrealizedYield = useCallback(async (user) => {
         let balance = await pmknFarmContract.pmknBalance(user)
         setPmknUnrealizedYield(balance.toString())
     }, [setPmknUnrealizedYield, pmknFarmContract])
 
 
-    const userDidMount = useCallback(async() => {
-    	try{
-    		await loadUser().then(res => {
-    			setUserAddress(res)
-    			loadEthBalance(res)
-    			loadDaiBalance(res)
-    			loadPmknBalance(res)
-    			loadStakingBalance(res)
-    			loadPmknYield(res)
-    			loadPmknUnrealizedYield(res)
-    		})
-    	} catch(error) {
-    		console.log(error)
-    	}
+    const userDidMount = useCallback(async () => {
+        try {
+            await loadUser().then(res => {
+                setUserAddress(res)
+                loadEthBalance(res)
+                loadDaiBalance(res)
+                loadPmknBalance(res)
+                loadStakingBalance(res)
+                loadPmknYield(res)
+                loadPmknUnrealizedYield(res)
+            })
+        } catch (error) {
+            console.log(error)
+        }
         await loadNetwork()
     }, [
-        loadUser, 
-        loadNetwork, 
-        loadEthBalance, 
+        loadUser,
+        loadNetwork,
+        loadEthBalance,
         loadDaiBalance,
         loadPmknBalance,
         loadStakingBalance,
@@ -261,7 +261,7 @@ function App() {
     ])
 
     useEffect(() => {
-        if(userAddress === "" && init === true){
+        if (userAddress === "" && init === true) {
             userDidMount()
         }
     }, [userDidMount, init, userAddress])
@@ -270,52 +270,52 @@ function App() {
      * @notice Contract balances/state
      */
 
-    const loadOwner = useCallback(async() => {
+    const loadOwner = useCallback(async () => {
         let contractOwner = await lotteryContract.owner()
         setOwner(contractOwner)
     }, [lotteryContract, setOwner])
 
-    const loadLotteryPool = useCallback(async() => {
+    const loadLotteryPool = useCallback(async () => {
         let balance = await pmknTokenContract.balanceOf(lotteryContract.address)
         setLotteryBalance(ethers.utils.formatEther(balance))
-    }, [lotteryContract, pmknTokenContract]) 
+    }, [lotteryContract, pmknTokenContract])
 
-    const loadLinkBalance = useCallback(async() => {
+    const loadLinkBalance = useCallback(async () => {
         let balance = await linkContract.balanceOf(lotteryContract.address)
         setLinkBalance(ethers.utils.formatEther(balance))
     }, [lotteryContract, linkContract, setLinkBalance])
 
-    const loadLotteryCount = useCallback(async() => {
+    const loadLotteryCount = useCallback(async () => {
         let count = await lotteryContract.lotteryCount()
         setLotteryCount(count.toString())
         return count.toString()
     }, [lotteryContract])
 
-    const loadWinningNumber = useCallback(async(lottoCount) => {
+    const loadWinningNumber = useCallback(async (lottoCount) => {
         let number = await lotteryContract.winningNumber(lottoCount)
         setWinningNumber(number.toString())
     }, [setWinningNumber, lotteryContract])
 
-    const contractStateDidMount = useCallback(async() => {
+    const contractStateDidMount = useCallback(async () => {
         await loadOwner()
         await loadLotteryPool()
         await loadLinkBalance()
         await loadLotteryCount()
-            .then(async(res) => {
+            .then(async (res) => {
                 await loadWinningNumber(res)
             })
-        }, [
-        loadOwner, 
-        loadLotteryPool, 
-        loadLinkBalance, 
-        loadLotteryCount, 
-        loadWinningNumber, 
+    }, [
+        loadOwner,
+        loadLotteryPool,
+        loadLinkBalance,
+        loadLotteryCount,
+        loadWinningNumber,
     ])
 
     useEffect(() => {
-      if(init === true){
-        contractStateDidMount()
-      }
+        if (init === true) {
+            contractStateDidMount()
+        }
     }, [init, contractStateDidMount])
 
     /**
@@ -323,27 +323,27 @@ function App() {
     */
 
     useEffect(() => {
-        if(userAddress !== ""){
-        /**
-         * @notice PmknFarm Events
-         */
-            pmknFarmContract.on("Stake", async(userAddress) => {
+        if (userAddress !== "") {
+            /**
+             * @notice PmknFarm Events
+             */
+            pmknFarmContract.on("Stake", async (userAddress) => {
                 await loadDaiBalance(userAddress)
                 await loadStakingBalance(userAddress)
             });
 
-            pmknFarmContract.on("Unstake", async(userAddress) => {
+            pmknFarmContract.on("Unstake", async (userAddress) => {
                 await loadDaiBalance(userAddress)
                 await loadStakingBalance(userAddress)
             })
 
-            pmknFarmContract.on("YieldWithdraw", async(userAddress) => {
+            pmknFarmContract.on("YieldWithdraw", async (userAddress) => {
                 await loadPmknUnrealizedYield(userAddress)
                 await loadPmknYield(userAddress)
                 await loadPmknBalance(userAddress)
             })
 
-            pmknFarmContract.on("MintNFT", async(userAddress) => {
+            pmknFarmContract.on("MintNFT", async (userAddress) => {
                 await loadPmknBalance(userAddress)
             })
 
@@ -351,41 +351,41 @@ function App() {
              * @notice Lottery events
              */
 
-            lotteryContract.on("NumberReceived", async(userAddress) => {
+            lotteryContract.on("NumberReceived", async (userAddress) => {
                 await loadLotteryCount()
-                  .then(async(res) => {
-                await loadWinningNumber(res)
-                })
+                    .then(async (res) => {
+                        await loadWinningNumber(res)
+                    })
             })
 
-            lotteryContract.on("LotteryClaim", async(userAddress) => {
+            lotteryContract.on("LotteryClaim", async (userAddress) => {
                 await loadPmknBalance(userAddress)
                 await loadLotteryPool()
             })
 
-            lotteryContract.on("WithdrawLink", async(userAddress) => {
+            lotteryContract.on("WithdrawLink", async (userAddress) => {
                 await loadLinkBalance()
             })
         }
 
-    /**
-     * @notice Updates Pmkn yield balance every 20 seconds
-     */
+        /**
+         * @notice Updates Pmkn yield balance every 20 seconds
+         */
 
-    if(stakingBalance > 0){
-        let interval = null
-        interval = setInterval(() => {
-            loadPmknYield(userAddress)
-        }, 20000)
-    return () => clearInterval(interval)
-    }
+        if (stakingBalance > 0) {
+            let interval = null
+            interval = setInterval(() => {
+                loadPmknYield(userAddress)
+            }, 20000)
+            return () => clearInterval(interval)
+        }
 
     }, [
-        pmknFarmContract, 
-        userAddress, 
+        pmknFarmContract,
+        userAddress,
         stakingBalance,
         lotteryContract,
-        loadDaiBalance, 
+        loadDaiBalance,
         loadStakingBalance,
         loadPmknUnrealizedYield,
         loadPmknYield,
@@ -399,13 +399,13 @@ function App() {
 
     return (
         <Container>
-          <ContractProvider value={contractState}>
-            <UserProvider value={userState}>
-              	<Main />
-            </UserProvider>
-          </ContractProvider>
+            <ContractProvider value={contractState}>
+                <UserProvider value={userState}>
+                    <Main />
+                </UserProvider>
+            </ContractProvider>
         </Container>
-      );
-    }
+    );
+}
 
 export default App;
